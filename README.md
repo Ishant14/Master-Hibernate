@@ -9,7 +9,9 @@ manually writing row mapper(RowMapper) but in spring framework we can directly u
         return jdbcTemplate.query("select * from person", new BeanPropertyRowMapper<Person>(Person.class));
     }
     
-provided the entity in this Person class must have the same member name as we are expecting to get in the result.    
+provided the entity in this Person class must have the same member name as we are expecting to get in the result.  
+
+>In Hibernate , simple native query are written using the tables in the database whereas the JPQL(Java Persistent Query Language ) are written using the Entities we create.
     
 
 
