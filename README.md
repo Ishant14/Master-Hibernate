@@ -80,6 +80,47 @@ Since the entity is lazily loaded , for the next line ```java student.getPasspor
 If we **@Transactional** on the top the method , then it will created the transaction for the whole method and hence no exception will be thrown.
 
 
+## @ManytoOne and @OnetoMany relationship 
+
+Suppose we have two tables one is **Course** and other is  **Review** . Let's suppose **Course** and **Review** have **OnetoMany**(one course can have many reviews but one review belongs to only one particular course).
+
+Table are as below 
+
+> Course :-  id, name
+> Review :- id. reviewstart, description
+
+To enable the ManytoOne and OnetoMany we define it as below :
+
+```java
+@OneToMany(mappedBy = "course")
+    List<Review> reviews = new ArrayList<>();
+```
+In the above code we have degined in course table that one course belongs to many review that is why **@OnetoMany** we have use  and in review table we will define it as :-
+
+```java 
+@ManyToOne
+    private Course course;
+```
+
+Below code will be used to add some review to the course :
+
+```java
+@Transactional
+    public void addReviews(){
+        Course course = entityManager.find(Course.class,100);
+        logger.info("Reviews for course id : - {} are {}", course.getId(),course.getReviews());
+
+        Review review1 = new Review("5", "Great Hands on stuff");
+
+        course.addReview(review1);
+        review1.setCourse(course);
+
+        entityManager.persist(review1);
+    }
+ ````
+ 
+ 
+ 
 
 
            
