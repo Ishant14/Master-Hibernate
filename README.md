@@ -33,7 +33,7 @@ Both the above approach works.
 
 >In Hibernate , simple native query are written using the tables in the database whereas the JPQL(Java Persistent Query Language ) are written using the Entities we create.
 
-# OnetoOne Relationship
+## OnetoOne Relationship
 
 Suppose we have 2 tables one as **Student** and other as **Passport** and there is one to one relationship between these two tables.
 
@@ -56,8 +56,8 @@ We can define the onetone relationship in student table as below :
 
 
 
-### Why do entity in HIbernate must have default constructor ?
+###### Why do entity in Hibernate must have default constructor ?
 
-Hibernate creates instance of entities using reflection it uses Class.newInstance() method, which require a no argument constructor to create an instance. It's effectively equivalent of new Entity(). This method throws InstantiationException if it doesn't found any no argument constructor in Entity class, and that's why it's advised to provide a no argument constructor.
+**Hibernate** creates instance of entities using reflection it uses **Class.newInstance()** method, which require a no argument constructor to create an instance. It's effectively equivalent of new Entity(). This method throws **InstantiationException** if it doesn't found any no argument constructor in Entity class, and that's why it's advised to provide a no argument constructor.
 
            
