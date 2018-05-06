@@ -37,6 +37,7 @@ We can define the onetone relationship in student table as below :
     private Passport passport;
 ```
 
+> One to One relationship are eager fetch by default 
 
 
            
