@@ -57,6 +57,29 @@ We can define the onetone relationship in student table as below :
 
 **Hibernate** creates instance of entities using reflection it uses **Class.newInstance()** method, which require a no argument constructor to create an instance. It's effectively equivalent of new Entity(). This method throws **InstantiationException** if it doesn't found any no argument constructor in Entity class, and that's why it's advised to provide a no argument constructor.
 
+## Why do read only method need a transaction during lazy loading of an entity ?
+
+Lets sgtart with the below exmaple , in this we have two entity student and passport and passort is lazily loaded.
+
+```java
+public void getStudent(){
+        Student student = entityManager.find( Student.class,2);
+        logger.info("Student details : {}", student);
+        logger.info("Passport details : {}", student.getPassport());
+    }
+```
+Above method will give the LazyLoad initialization exception. The reason for that is as :-
+
+For the line : ```java Student student = entityManager.find( Student.class,2); ```
+
+We are using the entityManager and entityManager always has transaction with it  Once the find() method get complete the transaction is removed . 
+
+Since the entity is lazily loaded , for the next line ```java student.getPassport()) ``` hibernate will try to fire a query and fetch the data but since no entity manager is there hence no transaction is there , so lazyload initilization exception is being thrown.
+
+
+If we **@Transactional** on the top the method , then it will created the transaction for the whole method and hence no exception will be thrown.
+
+
 
 
            
