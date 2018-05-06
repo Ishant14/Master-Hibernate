@@ -37,9 +37,9 @@ Both the above approach works.
 
 Suppose we have 2 tables one as **Student** and other as **Passport** and there is one to one relationship between these two tables.
 
-Student table has column  :-  id(primary key), name
+> Student table has column  :-  id(primary key), name
 
-Passport table has column :-  id(primary key), number
+> Passport table has column :-  id(primary key), number
 
 To enable the **onetone** relationship there are two ways , either we define the relationship in student table or we define it in passport table.
 
@@ -53,11 +53,10 @@ We can define the onetone relationship in student table as below :
 > One to One relationship are eager fetch by default 
 
 
-
-
-
-###### Why do entity in Hibernate must have default constructor ?
+## Why do entity in Hibernate must have default constructor ?
 
 **Hibernate** creates instance of entities using reflection it uses **Class.newInstance()** method, which require a no argument constructor to create an instance. It's effectively equivalent of new Entity(). This method throws **InstantiationException** if it doesn't found any no argument constructor in Entity class, and that's why it's advised to provide a no argument constructor.
+
+
 
            
