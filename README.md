@@ -127,6 +127,7 @@ Below code will be used to add some review to the course :
 Suppose we have two Student and Course and lets assume there is ManytoMany relationship between them. 
 
 > Student :- id, name
+
 > Course :- id, name
 
 To establish the ManytoMany relationship between these two tables we have different approaches as , we can insert column either in Student tables (id,name, course_id) or in Course table as (id, name, student_id)  but that is not the good approach since it will affect the normalisation of tables. Hence we will create another table which will store the relationship between student and courses as below :
@@ -151,8 +152,19 @@ and in Student table
     
 ```
 
+In manytomany it does matter which table is the owning table since relationship is being defined in some other separate table.
+
+```java
+@JoinTable(name="STUDENT_COURSE",
+    joinColumns=@JoinColumn(name="STUDENT_ID"),
+    inverseJoinColumns = @JoinColumn(name="COURSE_ID"))
+   
+```
+
+Above code will create the another relationship table (STUDENT_COURSE) with column as STUDENT_ID and COURSE_ID.
 
 
+> ** In ManyToMany realtionship entities are by default eager fetch.**
 
     `
            
