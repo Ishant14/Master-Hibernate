@@ -119,8 +119,40 @@ Below code will be used to add some review to the course :
     }
  ````
  
- 
+ > **ManytoOne or OnetoMany relationship are by default LAZY fetch.**
  
 
+##  ManytoMany Relationship
 
+Suppose we have two Student and Course and lets assume there is ManytoMany relationship between them. 
+
+> Student :- id, name
+> Course :- id, name
+
+To establish the ManytoMany relationship between these two tables we have different approaches as , we can insert column either in Student tables (id,name, course_id) or in Course table as (id, name, student_id)  but that is not the good approach since it will affect the normalisation of tables. Hence we will create another table which will store the relationship between student and courses as below :
+
+> STUDENT_COURSE :- student_id, course_id
+
+In the code to define the manytomany realtionship we will add @ManytoMany in both tables student and courses as below:
+
+```java
+@ManyToMany(mappedBy = "courses")
+    private List<Student> stduents = new ArrayList<>();
+````
+
+and in Student table 
+
+```java 
+@ManyToMany
+    @JoinTable(name="STUDENT_COURSE",
+    joinColumns=@JoinColumn(name="STUDENT_ID"),
+    inverseJoinColumns = @JoinColumn(name="COURSE_ID"))
+    private List<Course> courses = new ArrayList<>();
+    
+```
+
+
+
+
+    `
            
