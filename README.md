@@ -164,7 +164,7 @@ In manytomany it does matter which table is the owning table since relationship 
 Above code will create the another relationship table (STUDENT_COURSE) with column as STUDENT_ID and COURSE_ID.
 
 
-> ** In ManyToMany realtionship entities are by default eager fetch.**
+>   **In ManyToMany realtionship entities are by default eager fetch.**
 
     `
            
