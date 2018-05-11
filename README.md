@@ -200,3 +200,6 @@ A non-repeatable read occurs, when during the course of a transaction, a row is 
 
 A phantom read occurs when, in the course of a transaction, new rows are added by another transaction to the records being read.
 
+![phantomread](https://user-images.githubusercontent.com/5058363/39908923-0203f986-550e-11e8-9de2-b31e9f43f324.JPG)
+
+
