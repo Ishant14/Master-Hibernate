@@ -168,9 +168,9 @@ Above code will create the another relationship table (STUDENT_COURSE) with colu
 
 ## Transaction Management
 
-Starting State :  A's account : 200 and B's account : 300
-Step 1 : Deduct 50 from A's account 
-Step 2 : Add 50 to B's account 
+-Starting State :  A's account : 200 and B's account : 300
+-Step 1 : Deduct 50 from A's account 
+-Step 2 : Add 50 to B's account 
 
 **ACID Properties**
 
@@ -178,10 +178,39 @@ Step 2 : Add 50 to B's account
 
 > **Consistency** : Any transaction should leave a system in consistence state.
 
-> **Isolation** : One transatin should be isloated from other transaction and should not affect the other transaction.
+> **Isolation** : One transaction should be isloated from other transaction and should not affect the other transaction.
 
 > **Durability** : Once the transaction get completed , data should persist in database.
 
 
+ **Dirty Reads, Non Repeatable Read and Phantom Read**
+ 
+ -**Dirty Read** : A dirty read (aka uncommitted dependency) occurs when a transaction is allowed to read data from a row that has been modified by another running transaction and not yet committed.
+ 
+ 
+   |  **users** |
+   
+| **id**	 |  **name**  |  **age**   |
+| 1	         |  Joe	      |  20        |
+| 2	         |  Jill      |	 25        |
+
+
+Transaction 1	                                           Transaction 2
+/* Query 1 */
+SELECT age FROM users WHERE id = 1;
+/* will read 20 */
+                                                       /* Query 2 */
+                                           UPDATE users SET age = 21 WHERE id = 1;
+/* No commit here */
+/* Query 1 */
+SELECT age FROM users WHERE id = 1;
+/* will read 21 */
+ROLLBACK; /* lock-based DIRTY READ */
+
+ 
+ 
+ 
+ 
+ 
 
            
