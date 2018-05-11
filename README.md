@@ -188,29 +188,5 @@ Above code will create the another relationship table (STUDENT_COURSE) with colu
  -**Dirty Read** : A dirty read (aka uncommitted dependency) occurs when a transaction is allowed to read data from a row that has been modified by another running transaction and not yet committed.
  
  
-   |  **users** |
-   
-| **id**	 |  **name**  |  **age**   |
-| 1	         |  Joe	      |  20        |
-| 2	         |  Jill      |	 25        |
-
-
-Transaction 1	                                           Transaction 2
-/* Query 1 */
-SELECT age FROM users WHERE id = 1;
-/* will read 20 */
-                                                       /* Query 2 */
-                                           UPDATE users SET age = 21 WHERE id = 1;
-/* No commit here */
-/* Query 1 */
-SELECT age FROM users WHERE id = 1;
-/* will read 21 */
-ROLLBACK; /* lock-based DIRTY READ */
-
- 
- 
- 
- 
- 
 
            
