@@ -193,5 +193,10 @@ Above code will create the another relationship table (STUDENT_COURSE) with colu
 
 A non-repeatable read occurs, when during the course of a transaction, a row is retrieved twice and the values within the row differ between reads.
 
+![non-reatable-read](https://user-images.githubusercontent.com/5058363/39908835-8f02b756-550d-11e8-9aa0-4dce41bea16e.jpg)
 
- 
+
+**Phnatom Read** 
+
+A phantom read occurs when, in the course of a transaction, new rows are added by another transaction to the records being read.
+
