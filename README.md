@@ -175,8 +175,11 @@ Step 2 : Add 50 to B's account
 **ACID Properties**
 
 > **Atomicity** : Either all the steps should get completed or none of them should get completed.
+
 > **Consistency** : Any transaction should leave a system in consistence state.
+
 > **Isolation** : One transatin should be isloated from other transaction and should not affect the other transaction.
+
 > **Durability** : Once the transaction get completed , data should persist in database.
 
 
