@@ -187,6 +187,11 @@ Above code will create the another relationship table (STUDENT_COURSE) with colu
  
  -**Dirty Read** : A dirty read (aka uncommitted dependency) occurs when a transaction is allowed to read data from a row that has been modified by another running transaction and not yet committed.
  
- 
+ ![svetlin-nakov-database-transactions-23-728](https://user-images.githubusercontent.com/5058363/39908733-0ccd05f2-550d-11e8-921f-7fcfac3e4888.jpg)
 
-           
+**Non Repeatable Read**
+
+A non-repeatable read occurs, when during the course of a transaction, a row is retrieved twice and the values within the row differ between reads.
+
+
+ 
