@@ -166,5 +166,19 @@ Above code will create the another relationship table (STUDENT_COURSE) with colu
 
 >   **In ManyToMany realtionship entities are by default eager fetch.**
 
-    `
+## Transaction Management
+
+Starting State :  A's account : 200 and B's account : 300
+Step 1 : Deduct 50 from A's account 
+Step 2 : Add 50 to B's account 
+
+**ACID Properties**
+
+> **Atomicity** : Either all the steps should get completed or none of them should get completed.
+> **Consistency** : Any transaction should leave a system in consistence state.
+> **Isolation** : One transatin should be isloated from other transaction and should not affect the other transaction.
+> **Durability** : Once the transaction get completed , data should persist in database.
+
+
+
            
