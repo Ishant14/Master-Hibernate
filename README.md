@@ -209,3 +209,4 @@ A phantom read occurs when, in the course of a transaction, new rows are added b
 
 ![isolaton_levels](https://user-images.githubusercontent.com/5058363/39909357-117f319e-5510-11e8-974b-32d13d29cb45.png)
 
+http://what-when-how.com/hibernate/advanced-query-options-hibernate/
