@@ -1,5 +1,17 @@
-1. difference between load() vs get() method?
-2. difference between save() vs persist() method?
+### Difference between load() vs get() method?
+
+Hibernate session comes with different methods to load data from database. get and load are most used methods, at first look they seems similar but there are some differences between them.
+
+- ```get()``` loads the data as soon as it’s called whereas load() returns a proxy object and loads data only when it’s actually required, so load() is better because it support lazy loading.
+- Since ```load()``` throws exception when data is not found, we should use it only when we know data exists.
+- We should use get() when we want to make sure data exists in the database.
+
+More Details : https://www.journaldev.com/3472/hibernate-session-get-vs-load-difference-with-examples
+
+### Difference between save() vs persist() method?
+
+
+
 3. difference between update() vs merge()?
 4. difference between hibernate vs jdbc?
 5. difference between Session vs SessionFactory object?
