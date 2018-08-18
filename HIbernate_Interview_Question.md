@@ -12,13 +12,17 @@ More Details : https://www.journaldev.com/3472/hibernate-session-get-vs-load-dif
 
 
 
-3. difference between update() vs merge()?
-4. difference between hibernate vs jdbc?
-5. difference between Session vs SessionFactory object?
-6. is Session object is threadsafe?
-7. is SessionFactory is threadsafe if yes then how?
-8. hibernate domain object all states?
-9. hibernate is throwing HibernateException so it is checked or unchecked?
+### Difference between update() vs merge()?
+### Difference between hibernate vs jdbc?
+### Difference between Session vs SessionFactory object?
+### Is Session object is threadsafe?
+### Is SessionFactory is threadsafe if yes then how?
+### Hibernate domain object all states?
+### Hibernate is throwing HibernateException so it is checked or unchecked?
+
+Hibernate Exception is the RuntimeExcetion (Unchecked)
+A history of exceptions — Exceptions and how they should be handled always end in heated debates between Java developers. It isn’t surprising that Hibernate has some noteworthy history as well. Until Hibernate 3.x, all exceptions thrown by Hibernate were checked exceptions, so every Hibernate API forced the developer to catch and handle exceptions. This strategy was influenced by JDBC , which also throws only checked exceptions. However, it soon became clear that this doesn’t make sense, because all exceptions thrown by Hibernate are fatal. In many cases, the best a developer can do in this situation is to clean up, display an error message, and exit the application. Therefore, starting with Hibernate 3.x, all exceptions thrown by Hibernate are subtypes of the unchecked Runtime Exception, which is usually handled in a single location in an application. This also makes any Hibernate template or wrapper API obsolete.
+
 10. when u get following error?
 a.  ObjectNotFoundException
 b. NonUniqueObjectException
