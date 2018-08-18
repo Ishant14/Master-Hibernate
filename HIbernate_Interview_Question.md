@@ -23,14 +23,212 @@ More Details : https://www.journaldev.com/3472/hibernate-session-get-vs-load-dif
 Hibernate Exception is the RuntimeExcetion (Unchecked)
 A history of exceptions — Exceptions and how they should be handled always end in heated debates between Java developers. It isn’t surprising that Hibernate has some noteworthy history as well. Until Hibernate 3.x, all exceptions thrown by Hibernate were checked exceptions, so every Hibernate API forced the developer to catch and handle exceptions. This strategy was influenced by JDBC , which also throws only checked exceptions. However, it soon became clear that this doesn’t make sense, because all exceptions thrown by Hibernate are fatal. In many cases, the best a developer can do in this situation is to clean up, display an error message, and exit the application. Therefore, starting with Hibernate 3.x, all exceptions thrown by Hibernate are subtypes of the unchecked Runtime Exception, which is usually handled in a single location in an application. This also makes any Hibernate template or wrapper API obsolete.
 
-10. when u get following error?
-a.  ObjectNotFoundException
+### When u get following error?
+```a.  ObjectNotFoundException
 b. NonUniqueObjectException
-c. StaleStateException
-11. what is HQL? in HQL is it directly possible to work with insert query?
-12. in hibernate is it possible to work with procedure or function ?
-13. do u know about (n+1) select problem?
-14. tell me some strategy to solve (n+1) select problem?
+c. StaleStateException 
+```
+### what is HQL? in HQL is it directly possible to work with insert query?
+
+Hibernate created a new language named Hibernate Query Language (HQL), the syntax is quite similar to database SQL language. ***The main difference between is HQL uses class name instead of table name, and property names instead of column name.***
+
+- **HQL Select Query Example**
+
+Retrieve a stock data where stock code is “7277”.
+
+```SQL
+Query query = session.createQuery("from Stock where stockCode = :code ");
+query.setParameter("code", "7277");
+List list = query.list();
+```
+
+- **HQL Update Query Example**
+
+Update a stock name to “DIALOG1” where stock code is “7277”.
+
+```SQL
+Query query = session.createQuery("update Stock set stockName = :stockName" +
+    				" where stockCode = :stockCode");
+query.setParameter("stockName", "DIALOG1");
+query.setParameter("stockCode", "7277");
+int result = query.executeUpdate();
+```
+
+- **HQL Delete Query Example**
+
+```SQL
+Query query = session.createQuery("delete Stock where stockCode = :stockCode");
+query.setParameter("stockCode", "7277");
+int result = query.executeUpdate();
+```
+- **HQL Insert Query Example**
+
+> **In HQL, only the INSERT INTO … SELECT … is supported; there is no INSERT INTO … VALUES. HQL only support insert from another table**.  For Example :
+
+```SQL
+"insert into Object (id, name) select oo.id, oo.name from OtherObject oo"; 
+
+```
+
+Insert a stock record from another backup_stock table. This can also called bulk-insert statement.
+
+```SQL
+Query query = session.createQuery("insert into Stock(stock_code, stock_name)" +
+    			"select stock_code, stock_name from backup_stock");
+int result = query.executeUpdate();
+```
+> The query.executeUpdate() will return how many number of record has been inserted, updated or deleted.
+
+### In hibernate is it possible to work with procedure or function ?
+
+Yes, it is possible to call stored procedure using Hibernate . See the explanaiton below :
+
+MySQL store procedure
+
+Here’s a MySQL store procedure, which accept a stock code parameter and return the related stock data.
+
+```SQL
+DELIMITER $$
+
+CREATE PROCEDURE `GetStocks`(int_stockcode varchar(20))
+BEGIN
+   SELECT * FROM stock where stock_code = int_stockcode;
+   END $$
+
+DELIMITER ;
+
+```
+
+In MySQL, you can simple call it with a call keyword :
+```SQL
+CALL GetStocks('7277');
+```
+In Hibernate, there are three approaches to call a database store procedure.
+
+- **1. Native SQL – createSQLQuery**
+
+You can use **createSQLQuery()** to call a store procedure directly.
+
+```java
+Query query = session.createSQLQuery(
+	"CALL GetStocks(:stockCode)")
+	.addEntity(Stock.class)
+	.setParameter("stockCode", "7277");
+			
+List result = query.list();
+for(int i=0; i<result.size(); i++){
+	Stock stock = (Stock)result.get(i);
+	System.out.println(stock.getStockCode());
+}
+```
+
+- **2. NamedNativeQuery in annotation**
+
+Declare your store procedure inside the **@NamedNativeQueries** annotation.
+
+```java
+//Stock.java
+...
+@NamedNativeQueries({
+	@NamedNativeQuery(
+	name = "callStockStoreProcedure",
+	query = "CALL GetStocks(:stockCode)",
+	resultClass = Stock.class
+	)
+})
+@Entity
+@Table(name = "stock")
+public class Stock implements java.io.Serializable {
+...
+
+```
+Call it with **getNamedQuery().**
+
+```java
+Query query = session.getNamedQuery("callStockStoreProcedure")
+	.setParameter("stockCode", "7277");
+List result = query.list();
+for(int i=0; i<result.size(); i++){
+	Stock stock = (Stock)result.get(i);
+	System.out.println(stock.getStockCode());
+}
+```
+
+- **3. Call a Stored Procedure Using @NamedStoredProcedureQuery**
+
+If you are using JPA 2.1 and the Hibernate implementation of the EntityManagerFactory and EntityManager.
+
+The **@NamedStoredProcedureQuery** annotation can be used to declare a stored procedure:
+
+```java
+@NamedStoredProcedureQuery(
+  name="GetAllFoos",
+  procedureName="GetAllFoos",
+  resultClasses = { Foo.class }
+)
+@Entity
+public class Foo implements Serializable {
+    // Model Definition 
+}
+```
+To call our named stored procedure query, we need to have instantiated an **EntityManager**, and then call the **createNamedStoredProcedureQuery()** method to create the procedure:
+
+```java
+StoredProcedureQuery spQuery = 
+  entityManager.createNamedStoredProcedureQuery("getAllFoos");
+
+```
+### Do u know about (n+1) select problem ?  Tell me some strategy to solve (n+1) select problem ?
+
+Let's say you have a collection of ```Car``` objects (database rows), and each Car has a collection of Wheel objects (also rows). In other words, Car -> Wheel is a ```1-to-many``` relationship.
+
+Now, let's say you need to iterate through all the cars, and for each one, print out a list of the wheels. The naive O/R implementation would do the following:
+
+```SQL
+SELECT * FROM Cars;
+```
+
+And then for each Car:
+
+```SQL
+SELECT * FROM Wheel WHERE CarId = ?
+```
+
+In other words, you have one select for the Cars, and then N additional selects, where N is the total number of cars.
+
+**How to solve the N+1 problem ?**
+
+Suppose we have a class Manufacturer with a many-to-one relationship with Contact.
+
+We solve this problem by making sure that the initial query fetches all the data needed to load the objects we need in their appropriately initialized state. One way of doing this is using an HQL fetch join. We use the HQL
+
+```java
+"from Manufacturer manufacturer join fetch manufacturer.contact contact"
+```
+
+with the fetch statement. This results in an inner join:
+
+```SQL
+select MANUFACTURER.id from manufacturer and contact ... from 
+MANUFACTURER inner join CONTACT on MANUFACTURER.CONTACT_ID=CONTACT.id
+```
+
+**Using a Criteria query we can get the same result from**
+
+```java
+Criteria criteria = session.createCriteria(Manufacturer.class);
+criteria.setFetchMode("contact", FetchMode.EAGER);
+```
+
+which creates the SQL :
+
+```SQL
+select MANUFACTURER.id from MANUFACTURER left outer join CONTACT on 
+MANUFACTURER.CONTACT_ID=CONTACT.id where 1=1
+```
+in both cases, our query returns a list of Manufacturer objects with the contact initialized. Only one query needs to be run to return all the contact and manufacturer information required
+
+
 15. how many caches in hibernate? can u tell me differences between these caches?is they are automatically configured or we have to explicitly do some configuration?
 16. did u worked with Criteria api in hibernate and in which situation we should go for it?
 17. What is difference between getCurrentSession() and openSession() in Hibernate?
